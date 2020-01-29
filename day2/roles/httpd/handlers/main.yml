@@ -1,0 +1,41 @@
+---
+# handlers file for day2/roles/httpd
+- name: copy conf for virtual directory
+  become: yes
+  template:
+     src: tomcat_for_httpd.conf.j2
+     dest: /etc/httpd/conf.d/tomcat.conf
+  listen: "httpd installed"
+
+- name: enable & start httpd
+  become: yes
+  systemd:
+    state: started
+    enabled: yes
+    daemon_reload: yes
+    name: httpd
+  listen: "httpd installed"
+
+- name: get httpd version
+  become: yes
+  shell: /usr/sbin/httpd -version | grep "Server version" | awk '{print $3}' | sed 's/Apache\///'
+  register: httpd_version
+  listen: "httpd installed"
+
+- name: create ansible folder
+  become: yes
+  file:
+    path: /etc/ansible/facts.d
+    state: directory
+  listen: "httpd installed"
+
+- name: save httpd version fact
+  become: yes
+  copy:
+    content: |
+      {
+        "httpd_version": "{{ httpd_version.stdout }}"
+      }
+    dest: /etc/ansible/facts.d/httpd.fact
+  listen: "httpd installed"
+

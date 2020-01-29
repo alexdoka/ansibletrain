@@ -1,0 +1,14 @@
+[webservers]
+httpd1 ansible_host=192.168.120.171
+
+[appservers]
+tomcat1 ansible_host=192.168.120.172
+
+[nodes:children]
+webservers
+appservers
+
+[all:vars]
+ansible_connection=ssh
+ansible_user=devops
+ansible_private_key_file=/home/doka/ansible/ansibletrain/day3/devopscert

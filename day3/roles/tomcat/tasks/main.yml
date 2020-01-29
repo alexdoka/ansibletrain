@@ -1,0 +1,66 @@
+---
+# tasks file for day2/roles/tomcat
+- name: Handle the tomcat
+  vars:
+    tv: "{{ ansible_local['tomcat']['tomcat_version'] | default('undefined') }}"
+
+  block:
+
+  - name: create group tomcat
+    become: yes
+    group: name=tomcat gid={{ gid_tomcat }}
+
+  - name: create new tomcat user
+    become_user: root
+    become: true
+    user:
+      name: tomcat
+      uid: "{{ uid_tomcat }}"
+      group: tomcat
+      shell: /bin/nologin
+      home: /opt/tomcat
+      state: present
+
+  - name: copy tomcat
+    get_url:
+      url: "{{ url_tomcat }}"
+      dest: '/tmp/'
+
+  - name: Create a directory for tomcat
+    file:
+      path: /opt/tomcat
+      state: directory
+      owner: tomcat
+      group: tomcat
+
+  - name: Extract tomcat distr
+    become: yes
+    unarchive:
+      src: "/tmp/apache-tomcat-{{ tomcat_release }}.tar.gz"
+      dest: /opt/tomcat
+      remote_src: yes
+
+
+  - name: move tomcat in right place
+    become: yes
+    shell: | 
+      mv /opt/tomcat/apache-tomcat-*/* /opt/tomcat 
+      rm -rf /opt/tomcat/apache-tomcat-*
+
+
+  - name: change file permission on tomcat folder
+    become: yes
+    file:
+      path: /opt/tomcat
+      owner: tomcat
+      group: tomcat
+      recurse: yes
+
+
+  - name: copy systemd tomcat file
+    become: yes
+    copy: 
+      src: tomcat.service
+      dest: /etc/systemd/system/tomcat.service
+    notify: "tomcat installed"
+  when: tv == "undefined"

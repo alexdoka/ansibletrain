@@ -1,0 +1,22 @@
+---
+# defaults file for java
+# java_distr:
+#   "8": jdk-8u241-linux-x64.tar.gz
+#   "11": 'jdk-11.0.6_linux-x64_bin.tar.gz'
+#   "13": 'jdk-13.0.2_linux-x64_bin.tar.gz'
+
+java_distr:
+  "8": 
+  - 'jdk-8u241-linux-x64.tar.gz'
+  - 'jdk1.8.0_241'
+  "11": 
+  - 'jdk-11.0.6_linux-x64_bin.tar.gz'
+  - 'jdk-11.0.6'
+  "13": 
+  - 'jdk-13.0.2_linux-x64_bin.tar.gz'
+  - jdk-13.0.2
+
+java_bin_alternatives: 
+- java
+- javac
+- jar

@@ -1,0 +1,43 @@
+---
+# tasks file for java
+- name: Handle the java version
+  vars:
+    jv: "{{ ansible_local['java']['java version'] | default('undefined') }}"
+
+  block:
+
+  - name: create java dir
+    become: yes
+    file:
+      path: /opt/oracle/java
+      state: directory
+
+  - name: untar java package
+    become: yes
+    unarchive:
+      src: "{{ java_distr[java_version][0] }}"
+      dest: "/opt/oracle/java"
+    when: jv == "undefined"
+
+  - name: make java an alternative
+    become: yes
+    alternatives:
+      name: "{{ item }}"
+      link: /usr/bin/{{ item }}
+      path: /opt/oracle/java/{{ java_distr[java_version][1] }}/bin/{{ item }}
+    with_items: "{{ java_bin_alternatives }}"
+    notify: 'java installed'
+    when: jv == "undefined"
+  
+  - name: set $JAVA_HOME
+    become: yes
+    lineinfile:
+      path: /etc/environment
+      regexp: '^JAVA_HOME='
+      line: JAVA_HOME="/opt/oracle/java/{{ java_distr[java_version][1] }}/"
+
+  rescue:
+    - debug: msg='java version distribution hasn’t been found'
+  
+- shell: "source /etc/environment"
+

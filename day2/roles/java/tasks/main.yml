@@ -1,0 +1,7 @@
+---
+# tasks file for day2/roles/java
+- name: install java
+  become: yes
+  yum:  
+    name: java-1.{{ tomcat_release.split('.')[0] }}.0-openjdk.x86_64
+  notify: "java installed"

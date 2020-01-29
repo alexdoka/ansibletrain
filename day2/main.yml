@@ -1,0 +1,15 @@
+- name: main playbook
+  hosts: nodes
+  roles:
+  - role: common
+  
+- name: install java on appservers
+  hosts: appservers
+  roles:
+  - { role: tomcat, tomcat_release: "8.5.50"} 
+
+- name: apache
+  hosts: webservers
+  roles:
+  - role: httpd
+

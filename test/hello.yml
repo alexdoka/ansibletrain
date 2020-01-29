@@ -1,0 +1,8 @@
+- name: hello world play
+  hosts: nodes
+  tasks:
+  - debug: msg="debug message"
+  - debug: msg="{{ ansible_swapfree_mb }}"
+  - shell: echo "Hello world from shell!"
+
+# export ANSIBLE_HOST_KEY_CHECKING=False 

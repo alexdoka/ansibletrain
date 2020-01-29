@@ -1,0 +1,7 @@
+- name: main playbook
+  hosts: appservers
+
+  roles:
+    - role: java
+    - role: tomcat
+

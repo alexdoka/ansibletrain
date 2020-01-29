@@ -1,0 +1,23 @@
+- name: test my jinja2 filter
+  hosts: localhost
+  vars:
+    - test1: '123456789'
+    - test2: 34324234
+    - accounts:
+      - { name: Identity, id: 123456789}
+      - { name: Devops,   id: 987654321}
+      - { name: WCA,      id: 120983454}
+      - { name: API,      id: 435445665}
+  tasks:
+  # - debug: msg={{ accounts | json_query("[?name=='Identity'].id") | join('') }}
+  - debug: msg={{ test1 }}
+  - debug: msg={{ test1 | rev }}
+  - debug: msg={{ accounts | rev }}
+
+
+
+    
+
+
+
+

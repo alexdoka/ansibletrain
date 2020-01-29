@@ -1,0 +1,44 @@
+- name: bootstrap devops user
+
+  hosts: all
+
+  tasks:
+  - name: create new user
+    become_user: root
+    become: true
+    user:
+      name: devops
+      comment: devops
+      groups: wheel 
+      append: yes 
+      state: present
+
+  - name: Set authorized key to depovs user
+    become_user: root
+    become: true
+    authorized_key:
+      user: devops
+      state: present
+      key: "{{ lookup('file', 'devops.pem') }}"
+  
+  # add to sudo
+  - name: Allow 'wheel' group to have passwordless sudo
+    become_user: root
+    become: true
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%wheel'
+      line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
+
+- name: output info about system
+  hosts: all
+  tasks:
+  - debug: msg="ansible_processor_count is {{ ansible_processor_count }}"
+  - debug: msg="ansible_hostname is {{ ansible_hostname }}"
+  - debug: msg="ansible_all_ipv4_addresses are {{ ansible_all_ipv4_addresses }}"
+  - debug: msg="ansible_memory_mb.real.total is {{ ansible_memory_mb.real.total }}"
+
+# add hoc command for adding ssh keys
+# ansible all -i day1/inventory -u devops --become -m authorized_key -a "user=root state=present key='$(cat ~/.ssh/id_rsa.pub)'"

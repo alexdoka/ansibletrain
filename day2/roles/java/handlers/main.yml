@@ -1,0 +1,23 @@
+---
+# handlers file for day2/roles/java
+- name: get java version
+  shell: java -version 2>&1 | grep version | sed 's/openjdk version//'
+  register: actual_java_version
+  listen: "java installed"
+
+- name: create directory for facts
+  become: yes
+  file:
+    path: /etc/ansible/facts.d
+    state: directory
+  listen: "java installed"
+
+- name: copy java version
+  become: yes
+  copy:
+    content: | 
+      { 
+      "java version": {{ actual_java_version.stdout }} 
+      }
+    dest: /etc/ansible/facts.d/java.fact
+  listen: "java installed"

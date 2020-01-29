@@ -1,0 +1,11 @@
+- name: test module
+  hosts: localhost
+
+  tasks:
+  - name: some name
+    testmodule:
+      process_name: bash
+      urllink: 'http://localhost'
+      pattern: "(.*)can(.*)page"
+      pattern_for_headers: "(.*)nginx(.*)"
+    

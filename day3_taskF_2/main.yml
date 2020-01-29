@@ -1,0 +1,17 @@
+- name: test my jinja2 filter
+  hosts: localhost
+  vars:
+    - test1: '123456789'
+    - test2: 34324234
+    - accounts:
+      - { name: Identity, id: 999999}
+      - { name: Devops,   id: 987654321}
+      - { name: WCA,      id: 120983454}
+      - { name: API,      id: 435445665}
+  tasks:
+  - debug: msg={{ accounts | srch }}
+  - debug: msg={{ accounts | srch('Devops') }}
+
+
+
+

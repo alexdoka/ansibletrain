@@ -1,0 +1,33 @@
+---
+# handlers file for day2/roles/tomcat
+- name: start service tomcat
+  become: yes
+  systemd:
+    state: started
+    enabled: yes
+    daemon_reload: yes
+    name: tomcat
+  listen: "tomcat installed"
+
+- name: get httpd version
+  become: yes
+  shell: java -cp /opt/tomcat/lib/catalina.jar org.apache.catalina.util.ServerInfo | grep "Server version" | awk '{print $4}' | sed 's/Tomcat\///'
+  register: tomcat_version
+  listen: "tomcat installed"
+
+- name: create ansible folder
+  become: yes
+  file:
+    path: /etc/ansible/facts.d
+    state: directory
+  listen: "tomcat installed"
+
+- name: save tomcat version fact
+  become: yes
+  copy:
+    content: |
+      {
+        "httpd_version": "{{ tomcat_version.stdout }}"
+      }
+    dest: /etc/ansible/facts.d/tomcat.fact
+  listen: "tomcat installed"

@@ -1,0 +1,7 @@
+---
+# vars file for day2/roles/tomcat
+uid_tomcat: 20000
+gid_tomcat: 20000
+major: "{{ tomcat_release.split('.')[0] }}"
+url_tomcat: 'http://ftp.byfly.by/pub/apache.org/tomcat/tomcat-{{ major }}/v{{ tomcat_release }}/bin/apache-tomcat-{{ tomcat_release }}.tar.gz'
+

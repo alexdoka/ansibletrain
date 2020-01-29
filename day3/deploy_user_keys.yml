@@ -1,0 +1,10 @@
+- name: deploy user and key
+  hosts: nodes
+  vars:
+    ansible_user: vagrant
+  
+  roles:
+    - role: devops_user
+  
+  # ansible-playbook -i day2/inventory day2/deploy_user_keys.yml -k -v
+

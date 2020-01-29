@@ -1,0 +1,19 @@
+---
+# tasks file for day2/roles/common
+- name: update system
+  become: yes
+  yum:
+    name: '*'
+    state: latest
+
+- name: add extra app
+  become: yes
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - vim
+    - mc 
+    - bash-completion
+    - epel-release
+    

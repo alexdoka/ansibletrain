@@ -1,0 +1,129 @@
+- name: gathering facts
+  hosts: all
+  gather_facts: True
+
+
+- name: deploy webservers
+  hosts: webservers
+  gather_facts: False
+
+  tasks:
+  - name: install httpd
+    become: yes
+    yum:
+      name: httpd
+      state: latest
+  
+  - name: copy conf for virtual directory
+    become: yes
+    template:
+       src: templates/tomcat_for_httpd.conf.j2
+       dest: /etc/httpd/conf.d/tomcat.conf
+
+  
+  - name: enable & start httpd
+    become: yes
+    systemd:
+      state: started
+      enabled: yes
+      daemon_reload: yes
+      name: httpd
+
+
+
+
+- name: deploy app servers
+  
+  hosts: appservers
+  
+  vars:
+    tomcatversion: 7
+    tomcaturl:
+    - 'http://ftp.byfly.by/pub/apache.org/tomcat/tomcat-7/v7.0.99/bin/apache-tomcat-7.0.99.tar.gz'
+    - 'http://ftp.byfly.by/pub/apache.org/tomcat/tomcat-8/v8.5.50/bin/apache-tomcat-8.5.50.tar.gz'
+  
+  tasks: 
+  - name: install prerequisits
+    become: yes
+    yum:
+      name: "{{ packages }}"
+    vars:
+      packages:
+      - epel-release
+      - bash-completion
+      - vim 
+      - java-1.{{ tomcatversion }}.0-openjdk.x86_64
+  
+  - name: copy tomcat distr v.7
+    get_url:
+      url: "{{ tomcaturl[0] }}"
+      dest: '/tmp/'
+    when:  tomcatversion == 7
+
+  - name: copy tomcat distr v.8
+    get_url:
+      url: "{{ tomcaturl[1] }}"
+      dest: '/tmp/'
+    when:  tomcatversion == 8
+
+  - name: create new tomcat user
+    become_user: root
+    become: true
+    user:
+      name: tomcat
+      comment: tomcat
+      shell: /bin/nologin
+      home: /opt/tomcat
+      state: present
+
+  - name: Create a directory for tomcat
+    file:
+      path: /opt/tomcat
+      state: directory
+      owner: tomcat
+      group: tomcat
+  
+  - name: Find path for unpacking tomcat
+    find: paths="/tmp/" patterns="apache-tomcat-{{ tomcatversion }}*.tar.gz"
+    register: tomcat_distr_path
+
+  - name: Extract tomcat distr
+    become: yes
+    unarchive:
+      src: "{{ item.path }}"
+      dest: /opt/tomcat
+      remote_src: yes
+    with_items: "{{ tomcat_distr_path.files }}"
+  
+  - name: move tomcat in right place
+    become: yes
+    shell: | 
+      mv /opt/tomcat/apache-tomcat-*/* /opt/tomcat 
+      rm -rf /opt/tomcat/apache-tomcat-*
+  
+  - name: change file permission on tomcat folder
+    become: yes
+    file:
+      path: /opt/tomcat
+      owner: tomcat
+      group: tomcat
+      recurse: yes
+  
+  - name: copy systemd tomcat file
+    become: yes
+    copy: 
+      src: files/tomcat.service
+      dest: /etc/systemd/system/tomcat.service
+  
+  - name: start service cron on centos, in all cases, also issue daemon-reload to pick up config changes
+    become: yes
+    systemd:
+      state: started
+      enabled: yes
+      daemon_reload: yes
+      name: tomcat
+
+    
+
+
+

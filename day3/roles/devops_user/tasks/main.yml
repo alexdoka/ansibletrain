@@ -1,0 +1,34 @@
+- name: create main group for new user
+  become: yes
+  group:
+    name: "{{ main_group_for_new_user }}"
+    gid: "{{ gid_newuser }}"
+    state: present
+
+- name: create new user
+  become: yes
+  user:
+    name: "{{ new_user }}"
+    comment: "{{ new_user }} for deployments"
+    uid:  "{{ uid_newuser }}" 
+    group: "{{ main_group_for_new_user }}"
+    append: yes
+    groups: "{{ secondary_groups_for_new_user }}"
+    home: "{{ home_dir | default('/home/'+new_user) }}"
+    state: present
+   
+- name: Set authorized key to depovs user
+  become: true
+  authorized_key:
+    user: "{{ new_user }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  with_items: "{{ authorized_keys_for_new_user }}"
+
+# add to sudo wheel 
+- name: Allow new_user tohave passwordless sudo
+  become: true
+  copy:
+    content: "{{ new_user }} ALL=(ALL) NOPASSWD: ALL"
+    dest: "/etc/sudoers.d/{{ new_user }}"
+  when: new_user_is_sudo
