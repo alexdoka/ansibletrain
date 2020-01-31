@@ -1,0 +1,11 @@
+---
+# # vars file for day2/roles/devops_user
+new_user: devops
+main_group_for_new_user: devops
+secondary_groups_for_new_user: ["vagrant"]
+uid_newuser: 10001
+gid_newuser: 10001
+#home_dir: /home/{{ new_user }}123
+create_home_dir: True
+authorized_keys_for_new_user: ["devopscert.pub"]
+new_user_is_sudo: True 

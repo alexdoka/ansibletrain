@@ -1,0 +1,7 @@
+# add to sudo wheel 
+- name: Allow new_user tohave passwordless sudo
+  become: true
+  copy:
+    content: "{{ new_user }} ALL=(ALL) NOPASSWD: ALL"
+    dest: "/etc/sudoers.d/{{ new_user }}"
+  when: new_user_is_sudo

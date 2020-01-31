@@ -11,14 +11,19 @@ def remove_tags(text):
     res = TAG_BR.sub('', res)
     return res
 
+# def match_exp(urllink, pattern):
+#     r = requests.get(urllink)
+#     outstr = remove_tags(str(r.content))
+#     return "Pattern was found" if re.match(pattern, outstr) else "Pattern was NOT found"
+
 def match_exp(urllink, pattern):
     r = requests.get(urllink)
     outstr = remove_tags(str(r.content))
-    return "Pattern was found" if re.match(pattern, outstr) else "Pattern was NOT found"
+    return "Pattern was found" if re.search(pattern, outstr) else "Pattern was NOT found"
 
 urllink = "http://localhost"
-pattern = "(.*)can(.*)page"
+pattern = "allow"
 sss = match_exp(urllink, pattern)
-
+print(sss)
 
 print(1)

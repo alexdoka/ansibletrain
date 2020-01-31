@@ -1,0 +1,19 @@
+- name: sanity check webservers
+  hosts: webservers
+  vars: 
+    ansible_user: devops 
+    ansible_ssh_private_key_file: /home/doka/ansible/ansibletrain/day4/devopscert
+    test_service: httpd
+
+  tasks:
+    - name: sanity check
+      block:
+      - testmodule:
+          process_name: "{{  test_service }}"
+          urllink: http://{{ hostvars['httpd1'].ansible_host }}
+          pattern: 'Copyright'
+          pattern_for_headers: '(.*)Apache(.*)'
+      rescue:
+        - debug: msg="sanity checks is failed"
+      
+

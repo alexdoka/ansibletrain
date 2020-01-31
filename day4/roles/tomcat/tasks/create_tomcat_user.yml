@@ -1,0 +1,14 @@
+- name: create group tomcat
+  become: yes
+  group: name=tomcat gid={{ gid_tomcat }}
+  
+- name: create new tomcat user
+  become_user: root
+  become: true
+  user:
+    name: tomcat
+    uid: "{{ uid_tomcat }}"
+    group: tomcat
+    shell: /bin/nologin
+    home: /opt/tomcat
+    state: present

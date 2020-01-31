@@ -1,0 +1,8 @@
+- name: debug playbook
+  hosts: nodes
+  vars: 
+    ansible_user: devops 
+    ansible_ssh_private_key_file: /home/doka/ansible/ansibletrain/day4/devopscert
+  
+  tasks: 
+  - debug: msg="Test project to deploy tomcat and httpd"

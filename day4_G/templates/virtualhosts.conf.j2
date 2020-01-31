@@ -1,0 +1,8 @@
+{% for item in VH_params %}
+<VirtualHost {{ item.virtualhost }}:{{ item.port }}>
+    ServerName {{ item.servername }}
+    ProxyPass / http://192.168.120.172:8080/
+    ProxyPreserveHost On  
+    ProxyRequests Off
+</VirtualHost>
+{% endfor %}

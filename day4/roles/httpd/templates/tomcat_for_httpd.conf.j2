@@ -1,0 +1,7 @@
+<VirtualHost {{ ansible_host }}:80>
+    ServerName {{ ansible_host }}
+    ProxyPass / http://{{ hostvars['tomcat1'].ansible_host }}:8080/
+    ProxyPreserveHost On  
+    ProxyRequests Off
+</VirtualHost>
+

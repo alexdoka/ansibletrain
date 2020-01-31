@@ -1,0 +1,15 @@
+---
+# tasks file for day2/roles/tomcat
+- name: Handle the tomcat
+  vars:
+    tv: "{{ ansible_local['tomcat']['tomcat_version'] | default('undefined') }}"
+
+  block:
+
+  - include_tasks: create_tomcat_user.yml
+    when: '"create_tomcat_user" in operations'
+
+  - include_tasks: install_tomcat.yml
+    when: '"install_tomcat" in operations'
+
+  when: tv == "undefined"

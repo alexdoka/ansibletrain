@@ -1,0 +1,9 @@
+---
+# tasks file for day2/roles/httpd
+
+- name: install httpd
+  become: yes
+  yum:
+    name: httpd
+    state: latest
+  notify: "httpd installed"

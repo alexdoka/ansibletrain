@@ -1,0 +1,6 @@
+---
+# handlers file for day2/roles/httpd
+
+- import_tasks: start_httpd_service.yml
+- import_tasks: create_httpd_facts.yml
+

@@ -1,0 +1,18 @@
+- name: deploy appservers
+  hosts: appservers
+  vars: 
+    ansible_user: devops 
+    ansible_ssh_private_key_file: /home/doka/ansible/ansibletrain/day4/devopscert
+
+  roles:
+    - role: java
+      tags:
+        - java
+    - role: tomcat
+      vars: 
+        operations:
+          - create_tomcat_user
+          - install_tomcat
+      tags:
+        - tomcat
+

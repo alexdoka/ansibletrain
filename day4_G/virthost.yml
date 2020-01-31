@@ -1,0 +1,15 @@
+- name: test playbook
+  hosts: localhost
+
+  vars:
+    VH_params:
+      - { virtualhost: firsthost, port: 81, servername: namefirsthost }
+      - { virtualhost: secondhost, port: 82, servername: namesecondhost }
+      - { virtualhost: thirdhost, port: 83, servername: namethirdhost }
+  
+  tasks: 
+    - name: generate template
+      template: 
+        src: virtualhosts.conf.j2
+        dest: virtualhosts.conf
+      

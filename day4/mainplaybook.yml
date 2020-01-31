@@ -1,0 +1,17 @@
+- import_playbook: deploy_user_keys.yml
+  tags:
+    - newuser
+- import_playbook: deploy_appservers.yml 
+  tags:
+    - appservers
+
+- import_playbook: deploy_webservers.yml
+  tags:
+    - webservers
+
+- import_playbook: check_sanity.yml
+  tags:
+    - never
+    - sanity
+
+

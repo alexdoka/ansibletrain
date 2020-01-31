@@ -1,0 +1,16 @@
+- name: deploy user and key
+  hosts: nodes
+  vars: 
+    ansible_user: vagrant 
+    ansible_ssh_pass: vagrant
+  
+  roles:
+    - role: devops_user
+      vars:
+        operations:
+        - create_group_and_user
+        - deploy_ssh_key
+        - make_sudo
+        # - clean_user
+
+

@@ -1,0 +1,15 @@
+- name: copy conf for virtual directory
+  become: yes
+  template:
+     src: tomcat_for_httpd.conf.j2
+     dest: /etc/httpd/conf.d/tomcat.conf
+  listen: "httpd installed"
+
+- name: enable & start httpd
+  become: yes
+  systemd:
+    state: started
+    enabled: yes
+    daemon_reload: yes
+    name: httpd
+  listen: "httpd installed"

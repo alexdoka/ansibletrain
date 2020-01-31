@@ -1,0 +1,8 @@
+- name: start service tomcat
+  become: yes
+  systemd:
+    state: started
+    enabled: yes
+    daemon_reload: yes
+    name: tomcat
+  listen: "tomcat installed"

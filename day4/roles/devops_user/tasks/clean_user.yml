@@ -1,0 +1,15 @@
+- name: Remove the user 'devops'
+  become: yes
+  user:
+    name: devops
+    state: absent
+    remove: yes
+    force: True
+
+- name: remove sudo
+  become: yes
+  file:
+    path: /etc/sudoers.d/{{ new_user }}
+    state: absent
+
+

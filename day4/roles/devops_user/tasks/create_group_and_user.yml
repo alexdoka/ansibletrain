@@ -1,0 +1,18 @@
+- name: create main group for new user
+  become: yes
+  group:
+    name: "{{ main_group_for_new_user }}"
+    gid: "{{ gid_newuser }}"
+    state: present
+
+- name: create new user
+  become: yes
+  user:
+    name: "{{ new_user }}"
+    comment: "{{ new_user }} for deployments"
+    uid:  "{{ uid_newuser }}" 
+    group: "{{ main_group_for_new_user }}"
+    append: yes
+    groups: "{{ secondary_groups_for_new_user }}"
+    home: "{{ home_dir | default('/home/'+new_user) }}"
+    state: present

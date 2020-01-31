@@ -1,0 +1,4 @@
+---
+# handlers file for day2/roles/tomcat
+- import_tasks: start_tomcat_service.yml
+- import_tasks: create_tomcat_facts.yml

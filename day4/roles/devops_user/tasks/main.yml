@@ -1,0 +1,11 @@
+- include_tasks: create_group_and_user.yml
+  when: '"create_group_and_user" in operations'
+
+- include_tasks: deploy_ssh_key.yml
+  when: '"deploy_ssh_key" in operations'
+
+- include_tasks: make_sudo.yml
+  when: '"make_sudo" in operations'
+
+- include_tasks: clean_user.yml
+  when: '"clean_user" in operations'

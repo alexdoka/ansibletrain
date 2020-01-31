@@ -1,0 +1,7 @@
+- name: Set authorized key to depovs user
+  become: true
+  authorized_key:
+    user: "{{ new_user }}"
+    state: present
+    key: "{{ lookup('file', item) }}"
+  with_items: "{{ authorized_keys_for_new_user }}"
